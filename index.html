@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>入稿メイト｜不動産会社専用・資料を入れるだけで、SUUMO・at homeの入稿文が完成</title>
+<meta name="description" content="不動産会社専用のAI入稿ツール「入稿メイト」。物件資料をアップロードするだけで、AIが物件情報を読み取り、媒体ルールに沿った広告文章を作成します。">
+<!-- OGP: Cloudflare Pages公開後、og:url とog:imageの絶対URLを確定ドメインに更新してください -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="AIと、ケンカしていませんか？｜不動産会社専用「入稿メイト」（先行登録受付中）">
+<meta property="og:description" content="物件資料を入れてボタンを押すだけ。媒体ルールを覚えたAIが、SUUMO・at homeの入稿文を作成します。先行登録受付中。">
+<meta property="og:image" content="assets/images/hero-bg.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<!-- TODO(公開時): Cloudflare Web Analytics のスニペットをここに追加（Cloudflareダッシュボード → Analytics → Web Analytics でトークン発行。無料・Cookieなし・同意バナー不要） -->
+<style>
+  :root {
+    --navy: #1a3a5c;
+    --navy-dark: #12293f;
+    --accent: #e8842c;
+    --accent-dark: #c56a15;
+    --gold: #f5b14f;
+    --bg: #ffffff;
+    --bg-soft: #f5f7fa;
+    --text: #2c2c2c;
+    --text-soft: #5a6472;
+    --border: #dde3ea;
+    --green: #1d9e75;
+    --red: #c0392b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+    color: var(--text); background: var(--bg);
+    line-height: 1.8; font-size: 16px; overflow-x: hidden;
+  }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 110px 0; }
+  .grad-txt {
+    background: linear-gradient(92deg, var(--accent) 10%, var(--gold) 90%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+  }
+
+  /* ===== スクロール出現 ===== */
+  .reveal { opacity: 0; transform: translateY(34px); transition: opacity 0.85s ease, transform 0.85s ease; }
+  .reveal.show { opacity: 1; transform: none; }
+  .slide-l { opacity: 0; transform: translateX(-64px) rotateY(12deg); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .slide-r { opacity: 0; transform: translateX(64px) rotateY(-12deg); transition: opacity 0.9s ease, transform 0.9s ease; }
+  .slide-l.show, .slide-r.show { opacity: 1; transform: none; }
+  .reveal.zoom { transform: translateY(34px) scale(0.9); }
+  .reveal.zoom.show { transform: none; }
+  .reveal-d1 { transition-delay: 0.1s; }
+  .reveal-d2 { transition-delay: 0.25s; }
+  .reveal-d3 { transition-delay: 0.4s; }
+  .reveal-d4 { transition-delay: 0.55s; }
+  .reveal-d5 { transition-delay: 0.7s; }
+
+  /* ===== ヒーロー（フルスクリーン・シネマ調） ===== */
+  @keyframes rise { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: none; } }
+  .hero {
+    min-height: 96vh; display: flex; flex-direction: column; justify-content: center;
+    position: relative; overflow: hidden;
+    background:
+      linear-gradient(100deg, rgba(255,255,255,0.97) 0%, rgba(255,255,255,0.92) 44%, rgba(255,255,255,0.55) 70%, rgba(255,255,255,0.25) 100%),
+      url("assets/images/hero-bg.jpg") center/cover no-repeat;
+    padding: 80px 0 90px;
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 52px; align-items: center; }
+  .stage1 { animation: rise 0.9s ease 0.1s both; }
+  .stage2 { animation: rise 0.9s ease 0.35s both; }
+  .stage3 { animation: rise 0.9s ease 0.6s both; }
+  .stage4 { animation: rise 0.9s ease 0.85s both; }
+  .stage5 { animation: rise 1s ease 1.1s both; }
+  .badge {
+    display: inline-block; background: var(--accent); color: #fff;
+    font-weight: bold; padding: 7px 24px; border-radius: 999px;
+    font-size: 14px; letter-spacing: 0.06em; margin-bottom: 28px;
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232,132,44,0.5); }
+    50% { box-shadow: 0 0 0 12px rgba(232,132,44,0); }
+  }
+  .hero h1 { font-size: clamp(38px, 3.4vw, 46px); line-height: 1.42; margin-bottom: 20px; font-weight: 700; color: var(--navy-dark); }
+  .hero h1 .big { font-size: 1.8em; letter-spacing: 0.02em; line-height: 1; }
+  .hero .sub { font-size: 17px; color: #40495a; margin-bottom: 34px; max-width: 34em; }
+  .cta-btn {
+    display: inline-block; background: var(--accent); color: #fff;
+    font-size: 19px; font-weight: bold; padding: 18px 52px;
+    border-radius: 999px; text-decoration: none;
+    box-shadow: 0 10px 28px rgba(232,132,44,0.35);
+    transition: transform 0.15s ease, background 0.2s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .cta-btn::after { /* ホバー時に光が走るシャイン */
+    content: ""; position: absolute; top: 0; bottom: 0; left: -70%; width: 45%;
+    background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-20deg) translateX(0); pointer-events: none;
+    transition: transform 0.6s ease;
+  }
+  .cta-btn:hover { background: var(--accent-dark); transform: translateY(-3px) scale(1.02); box-shadow: 0 16px 38px rgba(232,132,44,0.5); }
+  .cta-btn:hover::after { transform: skewX(-20deg) translateX(430%); }
+  .cta-note { font-size: 15px; font-weight: 600; margin-top: 14px; color: #3d4759; }
+  .scroll-cue {
+    position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%);
+    color: var(--navy); font-size: 12px; letter-spacing: 0.2em; text-align: center;
+    animation: rise 1s ease 1.6s both;
+  }
+  .scroll-cue .chev { display: block; font-size: 20px; animation: bob 1.6s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(7px); } }
+
+  /* デモ画面ウィンドウ（共通部品） */
+  @keyframes floaty {
+    0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
+    50% { transform: translateY(-12px) rotateX(1.5deg) rotateY(-2deg); }
+  }
+  .hero-grid { perspective: 1600px; }
+  .demo-window {
+    background: #fff; border-radius: 14px; overflow: hidden;
+    box-shadow: 0 30px 70px rgba(10,25,45,0.35);
+    color: var(--text); font-size: 13.5px;
+    animation: rise 1s ease 1.1s both, floaty 7s ease-in-out 2.2s infinite;
+    transform-style: preserve-3d;
+  }
+  .demo-bar { background: #e9edf2; padding: 8px 14px; display: flex; gap: 6px; align-items: center; }
+  .demo-bar i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .demo-bar i:nth-child(1) { background: #f26d60; }
+  .demo-bar i:nth-child(2) { background: #f5bd4f; }
+  .demo-bar i:nth-child(3) { background: #62c554; }
+  .demo-bar span { margin-left: 8px; font-size: 11.5px; color: #7a8391; }
+  .demo-body { padding: 18px 20px 20px; min-height: 250px; }
+  .demo-step { display: none; }
+  .demo-step.active { display: block; animation: fadein 0.5s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .demo-label { font-size: 11.5px; font-weight: bold; color: var(--accent); letter-spacing: 0.08em; margin-bottom: 10px; }
+  .file-chip {
+    display: flex; align-items: center; gap: 10px;
+    border: 1.5px dashed #b8c2cf; border-radius: 8px; padding: 14px;
+    color: var(--text-soft); background: var(--bg-soft);
+  }
+  .file-chip .doc { font-size: 22px; }
+  .progress-outer { background: #e9edf2; border-radius: 999px; height: 8px; margin-top: 14px; overflow: hidden; }
+  .progress-inner { background: var(--green); height: 100%; width: 0%; border-radius: 999px; transition: width 1.6s ease; }
+  .demo-rows { margin-top: 10px; }
+  .demo-row { display: flex; justify-content: space-between; padding: 7px 4px; border-bottom: 1px solid #eef1f5; opacity: 0; transform: translateX(-8px); transition: all 0.4s ease; }
+  .demo-row.on { opacity: 1; transform: none; }
+  .demo-row b { color: var(--navy); font-weight: 600; }
+  .demo-row .ok { color: var(--green); font-weight: bold; }
+  .media-btns { display: flex; gap: 10px; margin-bottom: 14px; }
+  .media-btn {
+    flex: 1; text-align: center; padding: 10px 6px; border-radius: 8px;
+    border: 1.5px solid var(--border); font-weight: bold; color: var(--text-soft); font-size: 12.5px;
+  }
+  .media-btn.sel { border-color: var(--accent); background: #fff4e8; color: var(--accent-dark); animation: pop 0.3s ease; }
+  .media-btn.custom { border-style: dashed; color: #9aa5b2; }
+  @keyframes pop { 50% { transform: scale(1.06); } }
+  .typing-box {
+    border: 1px solid var(--border); border-radius: 8px; padding: 14px;
+    background: var(--bg-soft); min-height: 92px;
+  }
+  .typing-box .catch { font-weight: bold; color: var(--navy); font-size: 15px; }
+  .caret { display: inline-block; width: 2px; height: 1.1em; background: var(--navy); vertical-align: -2px; animation: blink 0.8s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .char-count { text-align: right; font-size: 11.5px; color: var(--green); font-weight: bold; margin-top: 8px; }
+
+  h2 { font-size: clamp(30px, 3.4vw, 44px); text-align: center; margin-bottom: 56px; color: var(--navy); font-weight: 700; }
+  h2 .en { display: block; font-size: 13px; color: var(--accent); letter-spacing: 0.22em; margin-bottom: 8px; }
+
+  /* ===== ビッグステートメント（映画の幕間） ===== */
+  .statement { text-align: center; padding: 110px 24px; }
+  .statement .st-line { font-size: 46px; font-weight: 700; color: var(--navy-dark); line-height: 1.6; }
+  .statement .st-sub { font-size: 17px; color: var(--text-soft); margin-top: 18px; }
+
+  /* ===== フォトバンド（全幅写真の幕） ===== */
+  .photo-band {
+    position: relative; padding: 150px 24px; text-align: center; color: #fff;
+    background-size: cover; background-position: center;
+  }
+  .photo-band::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(rgba(10,22,38,0.5), rgba(10,22,38,0.72));
+  }
+  .photo-band > * { position: relative; }
+  .photo-band .pb-line { font-size: 38px; font-weight: 700; line-height: 1.6; text-shadow: 0 2px 18px rgba(0,0,0,0.4); }
+  .photo-band .pb-sub { font-size: 16px; margin-top: 14px; opacity: 0.92; }
+  .band-1 { background-image: url("assets/images/band-1.jpg"); }
+  .band-2 { background-image: url("assets/images/band-2.jpg"); }
+  @media (min-width: 761px) {
+    /* 奥行き演出：写真は固定し、手前のコンテンツだけが流れる */
+    .photo-band, .final { background-attachment: fixed; }
+  }
+
+  /* ===== ジグザグ ===== */
+  .zig { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-bottom: 96px; perspective: 1400px; }
+  .zig.chat-zig { grid-template-columns: 1.2fr 0.8fr; }
+  .zig:last-child { margin-bottom: 0; }
+  .z-text h3 { font-size: 25px; color: var(--navy); margin-bottom: 14px; line-height: 1.5; }
+  .z-text h3 .en { display: block; font-size: 12px; color: var(--accent); letter-spacing: 0.2em; margin-bottom: 6px; }
+  .z-text p { font-size: 15.5px; color: var(--text-soft); }
+  .z-visual { min-width: 0; }
+
+  /* --- ケンカ チャット --- */
+  .chat-box { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: 0 18px 44px rgba(26,58,92,0.14); position: relative; }
+  .chat-case { font-size: 13px; font-weight: bold; color: var(--navy); letter-spacing: 0.06em; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+  .msg-row { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 14px; opacity: 0; transform: translateY(12px); transition: all 0.45s ease; }
+  .msg-row.on { opacity: 1; transform: none; }
+  .msg-row.me { flex-direction: row-reverse; }
+  .avcol { flex-shrink: 0; text-align: center; width: 46px; }
+  .avatar { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto; }
+  .avatar.staff { background: #fff1e3; border: 1.5px solid #f3cba0; }
+  .avatar.aiav { background: #e8eef5; border: 1.5px solid #c4d2e0; }
+  .av-label { font-size: 10.5px; font-weight: bold; color: var(--text-soft); margin-top: 2px; }
+  .bubble { max-width: 76%; padding: 12px 16px; border-radius: 14px; font-size: 14.5px; line-height: 1.7; }
+  .bubble.me { background: var(--navy); color: #fff; border-bottom-right-radius: 4px; }
+  .bubble.ai { background: #eef1f5; color: var(--text); border-bottom-left-radius: 4px; }
+  .bubble.ai .ng { color: var(--red); font-weight: bold; }
+  .chat-stamp {
+    position: absolute; right: 18px; bottom: 16px;
+    border: 3px solid var(--red); color: var(--red); font-weight: 700; font-size: 18px;
+    padding: 4px 14px; border-radius: 6px; transform: rotate(-8deg) scale(0); opacity: 0;
+    transition: all 0.3s cubic-bezier(.2,2,.4,1); background: rgba(255,255,255,0.92);
+  }
+  .chat-stamp.on { transform: rotate(-8deg) scale(1); opacity: 1; }
+
+  /* --- 検索結果で埋もれる/目立つ --- */
+  .listing-box { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: 0 18px 44px rgba(26,58,92,0.14); }
+  .listing-head { font-size: 11.5px; font-weight: bold; color: var(--text-soft); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 10px; }
+  .listing-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    padding: 11px 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px;
+    opacity: 0; transform: translateY(12px); transition: all 0.45s ease;
+    background: var(--bg-soft);
+  }
+  .listing-row.on { opacity: 1; transform: none; }
+  .listing-row .l-title { font-size: 12.5px; color: #8b95a3; font-weight: 600; }
+  .listing-row .l-sub { font-size: 10.5px; color: #b0b8c2; white-space: nowrap; }
+  .listing-row.hero-row { background: #fff8f0; border: 2px solid var(--accent); }
+  .listing-row.hero-row .l-title { color: var(--navy); font-size: 13.5px; }
+  .listing-row.hero-row.glow { animation: glow 1.6s ease-in-out infinite; }
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232,132,44,0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(232,132,44,0); }
+  }
+  .l-badge {
+    background: var(--accent); color: #fff; font-size: 10.5px; font-weight: bold;
+    padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+    opacity: 0; transform: scale(0); transition: all 0.3s cubic-bezier(.2,2,.4,1);
+  }
+  .hero-row.glow .l-badge { opacity: 1; transform: none; }
+
+  /* --- ルールチップ吸い込み --- */
+  .rule-box { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 22px; box-shadow: 0 18px 44px rgba(26,58,92,0.14); text-align: center; }
+  .rule-core {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--navy); color: #fff; border-radius: 10px; padding: 12px 22px;
+    font-weight: bold; font-size: 15px; margin-bottom: 18px;
+  }
+  .rule-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .rule-chip {
+    background: #fff4e8; color: var(--accent-dark); border: 1px solid #f3cba0;
+    border-radius: 999px; padding: 5px 14px; font-size: 12.5px; font-weight: bold;
+    opacity: 0; transform: translateY(16px) scale(0.9); transition: all 0.45s cubic-bezier(.2,1.4,.4,1);
+  }
+  .rule-chip.on { opacity: 1; transform: none; }
+  .rule-chip.mine { background: #e7f6ef; color: #0f6e56; border-color: #b5e2cf; }
+
+  /* --- 文字数カウンター --- */
+  .count-box { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 22px; box-shadow: 0 18px 44px rgba(26,58,92,0.14); }
+  .count-line { margin-bottom: 16px; }
+  .count-line .txt { font-size: 13.5px; background: var(--bg-soft); border-radius: 8px; padding: 10px 12px; color: var(--navy); font-weight: 600; min-height: 42px; }
+  .count-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; font-size: 12px; font-weight: bold; }
+  .count-meter { flex: 1; height: 6px; background: #e9edf2; border-radius: 999px; margin: 0 10px; overflow: hidden; }
+  .count-meter i { display: block; height: 100%; width: 0; background: var(--green); border-radius: 999px; transition: width 1.2s ease; }
+  .count-meter i.over { background: var(--red); }
+  .count-num.okc { color: var(--green); }
+  .count-num.ngc { color: var(--red); }
+  .shake { animation: shake 0.4s ease; }
+  @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+  /* --- 禁止用語 --- */
+  .ng-box { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 24px; box-shadow: 0 18px 44px rgba(26,58,92,0.14); position: relative; }
+  .ng-sentence { font-size: 15.5px; line-height: 2.1; color: var(--navy); font-weight: 600; }
+  .ng-word { position: relative; padding: 1px 3px; border-radius: 4px; transition: background 0.4s ease; }
+  .ng-word.hit { background: #fde3e0; color: var(--red); }
+  .ng-word.hit::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 55%;
+    border-top: 2.5px solid var(--red); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.35s ease 0.25s;
+  }
+  .ng-word.hit.strike::after { transform: scaleX(1); }
+  .ng-alert {
+    margin-top: 14px; background: #fdf0ef; border: 1px solid #f3c1bc; color: var(--red);
+    border-radius: 8px; padding: 10px 14px; font-size: 12.5px; font-weight: bold;
+    opacity: 0; transform: translateY(10px); transition: all 0.4s ease;
+  }
+  .ng-alert.on { opacity: 1; transform: none; }
+
+  /* --- 写真キャプション --- */
+  .photo-box { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 18px; box-shadow: 0 18px 44px rgba(26,58,92,0.14); }
+  .photo-frame {
+    border-radius: 10px; height: 170px; position: relative; overflow: hidden;
+    background: url("assets/images/photo-frame.jpg") center/cover;
+  }
+  .photo-scan {
+    position: absolute; left: 0; right: 0; height: 34%;
+    background: rgba(232,132,44,0.25); border-bottom: 2px solid var(--accent);
+    top: -40%; transition: top 1.6s linear;
+  }
+  .photo-scan.go { top: 105%; }
+  .photo-cap { margin-top: 12px; font-size: 13.5px; color: var(--navy); font-weight: 600; min-height: 44px; }
+
+  /* ===== あるある ===== */
+  .pains { background: var(--bg-soft); }
+  .pain-list { display: grid; gap: 14px; max-width: 760px; margin: 0 auto; }
+  .pain {
+    background: #fff; border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 24px; font-size: 17px; display: flex; gap: 14px; align-items: flex-start;
+    box-shadow: 0 8px 20px rgba(26,58,92,0.06);
+  }
+  .pain .x { color: var(--red); font-weight: bold; font-size: 20px; line-height: 1.6; }
+  .pain-close { text-align: center; margin-top: 44px; font-size: 26px; font-weight: 700; color: var(--navy); }
+  .pain-close strong { font-size: 1.15em; }
+
+  /* ===== 時間比較 ===== */
+  .time-compare { max-width: 760px; margin: 52px auto 0; }
+  .time-row { margin-bottom: 22px; }
+  .time-row .t-label { font-size: 14.5px; font-weight: bold; margin-bottom: 6px; }
+  .t-bar-outer { background: #e4e9f0; border-radius: 999px; height: 28px; overflow: hidden; }
+  .t-bar { height: 100%; border-radius: 999px; width: 0; transition: width 1.4s cubic-bezier(.2,.8,.3,1); display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; color: #fff; font-size: 12.5px; font-weight: bold; white-space: nowrap; }
+  .t-bar.old { background: #8b95a3; }
+  .t-bar.new { background: var(--green); }
+
+  /* ===== 3ステップ ===== */
+  .steps { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 14px; align-items: stretch; }
+  .step {
+    background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 30px 22px; text-align: center;
+    box-shadow: 0 8px 20px rgba(26,58,92,0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .steps { perspective: 1200px; }
+  .step:hover { transform: translateY(-8px) rotateX(4deg) scale(1.02); box-shadow: 0 22px 44px rgba(26,58,92,0.18); }
+  .step .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--gold)); color: #fff; font-size: 21px; font-weight: bold; margin-bottom: 14px;
+  }
+  .step h3 { font-size: 18px; color: var(--navy); margin-bottom: 8px; }
+  .step p { font-size: 14px; color: var(--text-soft); }
+  .step-arrow { display: flex; align-items: center; color: var(--accent); font-size: 28px; font-weight: bold; }
+
+  /* ===== 3Dハウス（CSS 3D transform・外部ライブラリ不使用） ===== */
+  .house3d-wrap { position: relative; display: flex; justify-content: center; margin: 0 auto 40px; height: 170px; perspective: 900px; }
+  .house3d { position: relative; width: 120px; height: 120px; transform-style: preserve-3d; transform: rotateX(-16deg) rotateY(24deg); will-change: transform; }
+  .h3d {
+    position: absolute; left: 0; top: 40px; width: 120px; height: 80px;
+    border: 2px solid var(--navy); box-sizing: border-box; backface-visibility: hidden;
+  }
+  .h3d-front { background: #fdf6ee; transform: translateZ(60px); }
+  .h3d-back  { background: #f2e8db; transform: rotateY(180deg) translateZ(60px); }
+  .h3d-left  { background: #f7eee1; transform: rotateY(-90deg) translateZ(60px); }
+  .h3d-right { background: #f7eee1; transform: rotateY(90deg) translateZ(60px); }
+  /* 玄関ドアと窓（正面） */
+  .h3d-front::after {
+    content: ""; position: absolute; bottom: 0; left: 16px; width: 24px; height: 38px;
+    background: var(--navy); border-radius: 3px 3px 0 0;
+  }
+  .h3d-front::before {
+    content: ""; position: absolute; top: 14px; right: 14px; width: 30px; height: 22px;
+    background: #cbe7f2; border: 2px solid var(--navy); box-sizing: border-box;
+  }
+  /* 切妻の三角（左右） */
+  .h3d-gable {
+    position: absolute; left: 0; top: 0; width: 120px; height: 42px;
+    background: #efe4d3; clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  }
+  .h3d-gable-l { transform: rotateY(-90deg) translateZ(60px); }
+  .h3d-gable-r { transform: rotateY(90deg) translateZ(60px); }
+  /* 屋根（前後2枚の傾斜面。高さ72 = √(60²+40²)） */
+  .h3d-roof {
+    position: absolute; left: -8px; top: 0; width: 136px; height: 72px;
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+    border: 2px solid var(--navy); box-sizing: border-box; transform-origin: top center;
+  }
+  .h3d-roof-f { transform: rotateX(56.3deg); }
+  .h3d-roof-b { transform: rotateX(-56.3deg); }
+  .house3d-shadow {
+    position: absolute; bottom: -4px; left: 50%; width: 160px; height: 24px;
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, rgba(26,58,92,0.22), transparent);
+    border-radius: 50%;
+  }
+
+  /* ===== Apple風：3ステップのピン留め展開（JSが .pin-on を付けた時のみ有効。低い画面では無効） ===== */
+  @media (min-width: 761px) and (min-height: 640px) {
+    .how-stage.pin-on { height: 240vh; }
+    .how-stage.pin-on .how-sticky {
+      position: sticky; top: 0; min-height: 100vh;
+      display: flex; align-items: center; padding: 30px 0;
+    }
+    .how-stage.pin-on .step { opacity: 0.35; transform: scale(0.95); transition: opacity 0.45s ease, transform 0.45s ease; }
+    .how-stage.pin-on .step.focus { opacity: 1; transform: scale(1.06); box-shadow: 0 24px 48px rgba(26,58,92,0.16); }
+    .how-stage.pin-on .step-arrow { opacity: 0.25; transition: opacity 0.45s ease; }
+    .how-stage.pin-on .step-arrow.lit { opacity: 1; }
+  }
+
+  /* ===== 数字 ===== */
+  .stats { background: linear-gradient(160deg, var(--navy) 0%, var(--navy-dark) 100%); color: #fff; }
+  .stats h2 { color: #fff; }
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; text-align: center; }
+  .stat .big { font-size: clamp(58px, 7.5vw, 108px); font-weight: 700; color: #ffd9b0; line-height: 1.1; letter-spacing: -0.02em; }
+  .stat .big small { font-size: clamp(18px, 2vw, 28px); }
+  .stat p { font-size: 14.5px; opacity: 0.9; margin-top: 8px; }
+
+  /* ===== 信頼 ===== */
+  .trust-box {
+    max-width: 760px; margin: 0 auto; background: #fff;
+    border: 2px solid var(--navy); border-radius: 14px; padding: 36px;
+    box-shadow: 0 12px 28px rgba(26,58,92,0.08);
+  }
+  .trust-box h3 { color: var(--navy); font-size: 20px; margin-bottom: 12px; }
+  .trust-box p { font-size: 15.5px; }
+
+  /* ===== 料金 ===== */
+  .price-table { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; max-width: 760px; margin: 0 auto; }
+  .price-table.four { grid-template-columns: repeat(4, 1fr); max-width: 1020px; gap: 18px; }
+  .price-table.four .plan { padding: 28px 18px; }
+  .price-table.four .plan .price { font-size: 27px; }
+  @media (max-width: 980px) { .price-table.four { grid-template-columns: 1fr 1fr; } }
+  .plan {
+    border: 1px solid var(--border); border-radius: 14px; padding: 34px 30px; text-align: center;
+    background: #fff; box-shadow: 0 8px 20px rgba(26,58,92,0.06);
+    transition: transform 0.25s ease;
+  }
+  .plan:hover { transform: translateY(-4px); }
+  .plan.featured { border: 3px solid var(--accent); position: relative; }
+  .plan.featured .tag {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #fff; font-size: 13px; font-weight: bold;
+    padding: 3px 18px; border-radius: 999px; white-space: nowrap;
+  }
+  .plan h3 { font-size: 18px; color: var(--navy); margin-bottom: 12px; }
+  .plan .price { font-size: 34px; font-weight: 700; color: var(--navy); }
+  .plan .price small { font-size: 15px; font-weight: normal; color: var(--text-soft); }
+  .plan ul { list-style: none; margin-top: 18px; text-align: left; font-size: 14px; color: var(--text-soft); }
+  .plan li { padding: 7px 0; border-top: 1px dashed var(--border); }
+  .price-note { text-align: center; font-size: 14.5px; font-weight: 600; color: #46505f; margin-top: 26px; }
+
+  /* ===== 最終CTA ===== */
+  .final {
+    position: relative; text-align: center; color: #fff; padding: 130px 24px;
+    background:
+      linear-gradient(rgba(13,28,48,0.78), rgba(13,28,48,0.88)),
+      url("assets/images/hero-bg.jpg") center/cover;
+  }
+  .final h2 { color: #fff; }
+  .final p.lead { font-size: 17px; margin-bottom: 38px; }
+
+  footer {
+    background: var(--navy-dark); color: rgba(255,255,255,0.82);
+    text-align: center; padding: 30px 20px; font-size: 14px;
+  }
+  footer p { margin: 0 auto 10px; max-width: 700px; line-height: 1.8; }
+  footer p:last-child { margin-bottom: 0; }
+  footer .fine { font-size: 12.5px; color: rgba(255,255,255,0.68); }
+
+  /* ===== アプリのように使える ===== */
+  .ease-strip { background: var(--bg-soft); padding: 56px 0; }
+  .ease-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 860px; margin: 0 auto; }
+  .ease-item {
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    padding: 26px 20px; text-align: center; box-shadow: 0 8px 20px rgba(26,58,92,0.06);
+  }
+  .ease-item .ico { font-size: 34px; display: block; margin-bottom: 10px; }
+  .ease-item h4 { font-size: 16.5px; color: var(--navy); margin-bottom: 6px; }
+  .ease-item p { font-size: 14px; color: #46505f; }
+  @media (max-width: 760px) { .ease-grid { grid-template-columns: 1fr; } }
+
+  /* ===== ポジション（業務システムとの住み分け） ===== */
+  .scope { background: linear-gradient(180deg, var(--bg-soft) 0%, #ffffff 62%); }
+  .scope-lead { max-width: 780px; margin: -26px auto 42px; text-align: center; font-size: 16px; color: #46505f; }
+  .scope-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; margin: 0 auto; }
+  .scope-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 16px;
+    padding: 30px 28px; box-shadow: 0 12px 30px rgba(26,58,92,0.08);
+  }
+  .scope-card .ico { font-size: 30px; display: block; margin-bottom: 10px; }
+  .scope-card h3 { font-size: 19px; color: var(--navy); margin-bottom: 10px; line-height: 1.5; }
+  .scope-card p { font-size: 15px; color: #46505f; }
+  .scope-time {
+    max-width: 900px; margin: 26px auto 0; background: var(--navy); color: #fff;
+    border-radius: 16px; padding: 26px 30px;
+    display: grid; grid-template-columns: auto 1fr; gap: 26px; align-items: center;
+  }
+  .scope-time .st-num { font-size: 25px; font-weight: 700; color: #fff; white-space: nowrap; line-height: 1.5; }
+  .scope-time .st-num b { color: #ffd9b0; }
+  .scope-time .st-txt { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.93); }
+  .scope-time .st-txt b { color: #ffd9b0; }
+  .scope-cta { text-align: center; margin-top: 28px; }
+  .scope-cta a {
+    color: var(--accent-dark); font-weight: 700; font-size: 15.5px; text-decoration: none;
+    border-bottom: 2px solid rgba(232,132,44,0.45); padding-bottom: 2px;
+  }
+  .scope-cta a:hover { border-bottom-color: var(--accent); }
+  @media (max-width: 760px) {
+    .scope-grid { grid-template-columns: 1fr; }
+    .scope-time { grid-template-columns: 1fr; gap: 12px; padding: 22px 20px; }
+    .scope-time .st-num { font-size: 20px; white-space: normal; }
+  }
+
+  /* ===== 強みバンド（ヒーロー直下） ===== */
+  .strengths { background: var(--bg-soft); border-bottom: 1px solid var(--border); padding: 36px 0; }
+  .strength-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .strength {
+    background: #fff; border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 22px; display: flex; gap: 13px; align-items: flex-start;
+    box-shadow: 0 8px 20px rgba(26,58,92,0.06); min-width: 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .strength:hover { transform: translateY(-6px); box-shadow: 0 18px 36px rgba(26,58,92,0.14); }
+  .strength .ico { font-size: 26px; line-height: 1.4; }
+  .strength h3 { font-size: 16.5px; color: var(--navy); line-height: 1.5; margin-bottom: 4px; }
+  .strength p { font-size: 13.5px; color: #46505f; line-height: 1.65; }
+
+  /* ===== 料金ピル ===== */
+  .price-pills { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: -30px 0 22px; }
+  .price-pill {
+    background: #fff4e8; color: var(--accent-dark); border: 1px solid #f3cba0;
+    border-radius: 999px; padding: 6px 18px; font-size: 14px; font-weight: bold;
+  }
+
+  @media (max-width: 760px) {
+    .hero { min-height: auto; padding: 64px 0 70px; }
+    .strength-grid { grid-template-columns: 1fr; }
+    .strengths { padding: 28px 0; }
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 29px; }
+    .statement .st-line { font-size: 30px; }
+    .photo-band { padding: 96px 20px; }
+    .photo-band .pb-line { font-size: 25px; }
+    .zig, .zig.chat-zig { grid-template-columns: 1fr; gap: 22px; margin-bottom: 64px; }
+    .zig .z-visual { order: 2; }
+    .zig .z-text { order: 1; }
+    .chat-box { padding: 16px; }
+    .bubble { font-size: 13.5px; max-width: 82%; padding: 10px 13px; }
+    .avatar { width: 34px; height: 34px; font-size: 18px; }
+    .avcol { width: 38px; }
+    #chat-msgs { min-height: 320px !important; }
+    .steps { grid-template-columns: 1fr; }
+    .step-arrow { justify-content: center; transform: rotate(90deg); }
+    .price-table { grid-template-columns: 1fr; }
+    .stat-grid { grid-template-columns: 1fr; }
+    section { padding: 56px 0; }
+    .scroll-cue { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .reveal, .slide-l, .slide-r, .stage1, .stage2, .stage3, .stage4, .stage5 { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="badge stage1">不動産会社専用｜近日公開・先行登録受付中</span>
+      <h1 class="stage2"><span class="big">AI</span>と、<span class="big grad-txt">ケンカ</span><br>していませんか？</h1>
+      <p class="sub stage3">ルールを教えても、翌日には忘れている。文字数は自分で数え直し。——<b>不動産の入稿ルールを最初から知っているAI</b>なら、資料を入れてボタンを押すだけです。</p>
+      <div class="stage4">
+        <a class="cta-btn" href="#register">先行登録する（無料）</a>
+        <p class="cta-note">先行登録いただいた方には、公開時に無料お試し枠をご案内します。</p>
+      </div>
+    </div>
+
+    <div class="demo-window stage5" id="demo">
+      <div class="demo-bar"><i></i><i></i><i></i><span>入稿メイト（デモ・架空の物件）</span></div>
+      <div class="demo-body">
+
+        <div class="demo-step active" data-step="0">
+          <p class="demo-label">STEP 1｜資料をアップロード</p>
+          <div class="file-chip"><span class="doc">📄</span><span>マイソク_東京タワー町3丁目.pdf</span></div>
+          <div class="progress-outer"><div class="progress-inner" id="prog"></div></div>
+          <p style="font-size:12px; color:var(--text-soft); margin-top:8px;" id="prog-text">AIが資料を読み取っています…</p>
+        </div>
+
+        <div class="demo-step" data-step="1">
+          <p class="demo-label">STEP 2｜読み取り結果を確認</p>
+          <div class="demo-rows">
+            <div class="demo-row"><span><b>所在地</b></span><span>東京タワー町3丁目 <span class="ok">✓</span></span></div>
+            <div class="demo-row"><span><b>価格</b></span><span>4,980万円 <span class="ok">✓</span></span></div>
+            <div class="demo-row"><span><b>間取り</b></span><span>3LDK <span class="ok">✓</span></span></div>
+            <div class="demo-row"><span><b>所在階</b></span><span>12階（最上階） <span class="ok">✓</span></span></div>
+            <div class="demo-row"><span><b>向き</b></span><span style="color:#b06a00;">資料に記載なし → 不明</span></div>
+          </div>
+        </div>
+
+        <div class="demo-step" data-step="2">
+          <p class="demo-label">STEP 3｜媒体を選んで文章生成</p>
+          <div class="media-btns">
+            <div class="media-btn" id="btn-suumo">SUUMO</div>
+            <div class="media-btn">at home</div>
+            <div class="media-btn custom">＋自社ルール</div>
+          </div>
+          <div class="typing-box">
+            <p class="catch"><span id="type-target"></span><span class="caret" id="caret"></span></p>
+            <p class="char-count" id="char-ok" style="opacity:0;">25文字 / 上限37文字 ✓ 禁止用語なし ✓</p>
+          </div>
+          <p style="font-size:11px; color:var(--text-soft); margin-top:8px;">媒体は追加できます。会社独自のルールもOK。</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cue">SCROLL<span class="chev">⌄</span></div>
+</div>
+
+<div class="strengths">
+  <div class="wrap strength-grid">
+    <div class="strength reveal reveal-d1">
+      <span class="ico">📷</span>
+      <div>
+        <h3>写真コメントまで自動で</h3>
+        <p>選んだ写真から掲載用コメントをAIが下書き。確認して確定するだけです。</p>
+      </div>
+    </div>
+    <div class="strength reveal reveal-d2">
+      <span class="ico">🎫</span>
+      <div>
+        <h3>月額なし・980円の回数券</h3>
+        <p>使うぶんだけ購入。物件が動かない月は0円です。</p>
+      </div>
+    </div>
+    <div class="strength reveal reveal-d3">
+      <span class="ico">🗂️</span>
+      <div>
+        <h3>SUUMO・at home・SNSまで</h3>
+        <p>1つの資料から、Instagram・X向けの投稿文面まで作成できます。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="pains">
+  <div class="wrap">
+    <h2 class="reveal"><span class="en">PROBLEM</span>こんな入稿作業、していませんか？</h2>
+
+    <div class="zig chat-zig">
+      <div class="z-visual slide-l">
+        <div class="chat-box anim-chat">
+          <p class="chat-case" id="chat-case">よくあるやり取り 1/3</p>
+          <div id="chat-msgs" style="min-height: 360px;"></div>
+          <div class="chat-stamp" id="chat-stamp">毎回コレ</div>
+        </div>
+      </div>
+      <div class="z-text slide-r">
+        <h3><span class="en">SCENE 01</span>返ってくるのは、<br>“どの物件にも使える文”ばかり。</h3>
+        <p>37文字の枠をギリギリまで使って差別化したい。でも魅力的な言葉が思いつかない。AIに頼めば、当たり障りのない一文が返ってくるだけ。<b>この物件の資料を読み込んだうえで提案してくれるAI</b>なら、話は変わります。</p>
+      </div>
+    </div>
+
+    <div class="pain-list">
+      <div class="pain reveal reveal-d1"><span class="x">✕</span>AIチャットにSUUMOの文字数ルールを教えても、次の日には忘れられている</div>
+      <div class="pain reveal reveal-d2"><span class="x">✕</span>物件資料を見ながら、同じ情報を何度も手で打ち込んでいる</div>
+      <div class="pain reveal reveal-d3"><span class="x">✕</span>「もっとこうして」の修正のやり取りだけで30分たっている</div>
+    </div>
+    <p class="pain-close reveal">その時間、このシステムなら<strong class="grad-txt">ボタンひとつ</strong>です。</p>
+
+    <div class="zig" style="margin-top: 76px;">
+      <div class="z-text slide-l">
+        <h3><span class="en">SCENE 02</span>同じ物件が、<br>ズラッと並ぶ検索結果。</h3>
+        <p>仲介物件は、同じ物件を何社もが同時に掲載します。買い手の画面には同じ価格・同じ間取りがずらり。<b>違いはキャッチコピーだけ。</b>初期値のままの会社は、そのまま埋もれていきます。</p>
+      </div>
+      <div class="z-visual slide-r">
+        <div class="listing-box anim-listing">
+          <p class="listing-head">検索結果（イメージ）：東京タワー町3丁目の中古一戸建て</p>
+          <div class="listing-row"><span class="l-title">東京タワー町３丁目（タワー町駅） 4980万円</span><span class="l-sub">初期値のまま</span></div>
+          <div class="listing-row"><span class="l-title">東京タワー町３丁目（タワー町駅） 4980万円</span><span class="l-sub">初期値のまま</span></div>
+          <div class="listing-row hero-row"><span class="l-title">◎最上階×街を一望×タワーを望む3LDKレジデンス</span><span class="l-badge">目に留まる</span></div>
+          <div class="listing-row"><span class="l-title">東京タワー町３丁目（タワー町駅） 4980万円</span><span class="l-sub">初期値のまま</span></div>
+          <div class="listing-row"><span class="l-title">東京タワー町３丁目（タワー町駅） 4980万円</span><span class="l-sub">初期値のまま</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="time-compare reveal" id="time-compare">
+      <div class="time-row">
+        <div class="t-label"><span>これまで（AIチャットと往復）</span></div>
+        <div class="t-bar-outer"><div class="t-bar old" data-w="100%">約30分／1物件</div></div>
+      </div>
+      <div class="time-row">
+        <div class="t-label"><span>このシステム</span></div>
+        <div class="t-bar-outer"><div class="t-bar new" data-w="18%">数分</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="statement">
+  <p class="st-line reveal zoom">資料を、入れる。</p>
+  <p class="st-line reveal zoom reveal-d2">ボタンを、押す。</p>
+  <p class="st-line reveal zoom reveal-d3"><span class="grad-txt">入稿文が、できあがる。</span></p>
+  <p class="st-sub reveal reveal-d4">それだけの道具を、不動産の現場のために作りました。</p>
+</div>
+
+<section style="padding-top: 0;" class="how-stage" id="how">
+  <div class="how-sticky">
+  <div class="wrap">
+    <div class="house3d-wrap reveal" aria-hidden="true">
+      <div class="house3d" id="house3d">
+        <div class="h3d h3d-front"></div>
+        <div class="h3d h3d-back"></div>
+        <div class="h3d h3d-left"></div>
+        <div class="h3d h3d-right"></div>
+        <div class="h3d-gable h3d-gable-l"></div>
+        <div class="h3d-gable h3d-gable-r"></div>
+        <div class="h3d-roof h3d-roof-f"></div>
+        <div class="h3d-roof h3d-roof-b"></div>
+      </div>
+      <div class="house3d-shadow"></div>
+    </div>
+    <h2 class="reveal"><span class="en">HOW IT WORKS</span>使い方は3ステップ</h2>
+    <div class="steps">
+      <div class="step reveal reveal-d1">
+        <span class="num">1</span>
+        <h3>資料を入れる</h3>
+        <p>マイソクなどの物件資料（PDF・写真）をアップロードするだけ。AIが130項目以上の物件情報を自動で読み取ります。</p>
+      </div>
+      <div class="step-arrow reveal reveal-d2">→</div>
+      <div class="step reveal reveal-d2">
+        <span class="num">2</span>
+        <h3>内容を確認する</h3>
+        <p>AIが読み取った内容を画面で確認して確定。読み取れなかった項目は「不明」と正直に表示され、勝手に補完しません。</p>
+      </div>
+      <div class="step-arrow reveal reveal-d3">→</div>
+      <div class="step reveal reveal-d3">
+        <span class="num">3</span>
+        <h3>媒体を選んで生成</h3>
+        <p>SUUMO・at homeなら媒体ルールに合ったキャッチコピーと紹介文が3案完成。Instagram・X向けの投稿文面も、同じ資料から作れます。</p>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<div class="ease-strip">
+  <div class="wrap">
+    <div class="ease-grid">
+      <div class="ease-item reveal reveal-d1"><span class="ico">🚫</span><h4>インストール不要</h4><p>ブラウザで開くだけ。面倒なセットアップはありません。</p></div>
+      <div class="ease-item reveal reveal-d2"><span class="ico">🖥️</span><h4>デスクトップにアイコン追加</h4><p>アプリのようにワンクリックで起動できます（スマホのホーム画面にも）。</p></div>
+      <div class="ease-item reveal reveal-d3"><span class="ico">📱</span><h4>PC・スマホどちらでも</h4><p>会社のPCでも外出先のスマホでも、同じデータで使えます。</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="photo-band band-1">
+  <p class="pb-line reveal">その30分を、<br>物件の魅力を伝える時間に。</p>
+  <p class="pb-sub reveal reveal-d2">入稿作業は、道具に任せられる時代になりました。</p>
+</div>
+
+<section class="stats">
+  <div class="wrap">
+    <h2 class="reveal"><span class="en" style="color:#ffd9b0;">NUMBERS</span>数字で見る</h2>
+    <div class="stat-grid">
+      <div class="stat reveal reveal-d1"><div class="big"><span class="count" data-to="134">0</span><small>項目</small></div><p>資料1枚からAIが読み取る物件情報の数</p></div>
+      <div class="stat reveal reveal-d2"><div class="big"><span class="count" data-to="3">0</span><small>案</small></div><p>ワンクリックで生成される文章の候補数</p></div>
+      <div class="stat reveal reveal-d3"><div class="big"><span class="count" data-to="2">0</span><small>媒体＋α</small></div><p>SUUMO・at homeに標準対応。Instagram・X向けの投稿文面や自社ルールも追加できます</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="reveal"><span class="en">FEATURES</span>“ふつうのAI”との違い</h2>
+
+    <div class="zig">
+      <div class="z-text slide-l">
+        <h3><span class="en">FEATURE 01</span>媒体ルールを、<br>最初から知っています。</h3>
+        <p>SUUMOはキャッチ37文字＋サブキャッチ300文字、at homeは全角のみ——媒体ごとのルールを組み込み済み。<b>教える必要も、覚えさせ直す必要もありません。</b>会社独自のルールを追加することもできます。</p>
+      </div>
+      <div class="z-visual slide-r">
+        <div class="rule-box anim-rules">
+          <div class="rule-core">🏠 入稿メイト</div>
+          <div class="rule-chips">
+            <span class="rule-chip">SUUMO：キャッチ37文字</span>
+            <span class="rule-chip">SUUMO：サブキャッチ300文字</span>
+            <span class="rule-chip">at home：全角のみ</span>
+            <span class="rule-chip">禁止用語リスト内蔵</span>
+            <span class="rule-chip mine">＋自社ルールも登録OK</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="zig">
+      <div class="z-visual slide-l">
+        <div class="count-box anim-count">
+          <div class="count-line">
+            <div class="txt" id="cl1-txt"></div>
+            <div class="count-meta">
+              <span>キャッチコピー</span>
+              <span class="count-meter"><i id="cl1-bar"></i></span>
+              <span class="count-num" id="cl1-num">0 / 37</span>
+            </div>
+          </div>
+          <div class="count-line">
+            <div class="txt" style="color:#8b95a3;">上限を超えると——</div>
+            <div class="count-meta">
+              <span>超過の例</span>
+              <span class="count-meter"><i id="cl2-bar"></i></span>
+              <span class="count-num" id="cl2-num">0 / 37</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="z-text slide-r">
+        <h3><span class="en">FEATURE 02</span>文字数は、<br>システムが数えます。</h3>
+        <p>生成した文章の文字数を自動でカウントし、上限を超えていればその場で赤く警告。<b>指を折って数え直す作業はなくなります。</b></p>
+      </div>
+    </div>
+
+    <div class="zig">
+      <div class="z-text slide-l">
+        <h3><span class="en">FEATURE 03</span>使えない表現を、<br>自動で見張ります。</h3>
+        <p>「完全」「万全」「掘り出し物」——不動産広告で使用できない表現（公正競争規約に基づく禁止用語）を、生成後にシステムがチェック。<b>うっかり掲載を防ぎます。</b></p>
+      </div>
+      <div class="z-visual slide-r">
+        <div class="ng-box anim-ng">
+          <p class="ng-sentence">駅近の<span class="ng-word" id="ngw1">完全</span>な住まい。<span class="ng-word" id="ngw2">掘り出し物</span>の一邸です。</p>
+          <div class="ng-alert" id="ng-alert">⚠ 使用できない表記が2件見つかりました：「完全」「掘り出し物」</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="zig">
+      <div class="z-visual slide-l">
+        <div class="photo-box anim-photo">
+          <div class="photo-frame">
+            <div class="photo-scan" id="photo-scan"></div>
+          </div>
+          <p class="photo-cap"><span id="cap-target"></span><span class="caret" id="cap-caret" style="display:none;"></span></p>
+        </div>
+      </div>
+      <div class="z-text slide-r">
+        <h3><span class="en">FEATURE 04</span>写真のコメントまで、<br>AIが下書きします。</h3>
+        <p>SUUMO・at homeには写真1枚ごとにコメント欄があり、手作業では地味に時間がかかる部分です。選んだ写真をまとめて処理し、<b>写っているものだけ</b>を根拠にコメント案を下書き。写真から分からないこと（日当たり・広さなど）は書かず、最後は人が確認して確定します。<b>写真コメントまで対応する入力補助ツールは、まだ多くありません。</b></p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="pains">
+  <div class="wrap">
+    <h2 class="reveal"><span class="en">POLICY</span>「AIまかせ」にしない設計です</h2>
+    <div class="trust-box reveal">
+      <h3>最終確認は、必ず人が行う仕組み</h3>
+      <p>不動産広告は正確さが命です。本システムはAIの読み取り結果をそのまま使わせず、<b>担当者が確認・確定した情報だけ</b>から文章を作ります。AIが推測で情報を補うことはありません。読み取れなかった項目は「不明」と表示し、生成された文章もお客様が確認してから採用する流れになっています。</p>
+    </div>
+  </div>
+</section>
+
+<section class="scope">
+  <div class="wrap">
+    <h2 class="reveal"><span class="en">POSITION</span>「システムを入れ替える」<br>話ではありません。</h2>
+    <p class="scope-lead reveal reveal-d1">広告文をAIで作る機能は、大手の業務システムにも搭載されています。ただしそれは、物件管理から顧客管理まで<b>一式を導入した会社向けの機能</b>です。「入稿の文章だけ、なんとかしたい」——その一点のために作ったのが入稿メイトです。</p>
+
+    <div class="scope-grid">
+      <div class="scope-card reveal reveal-d2">
+        <span class="ico">🔌</span>
+        <h3>今のやり方は、<br>そのままで大丈夫</h3>
+        <p>物件管理も顧客管理も、使い慣れた道具のまま。入稿メイトが引き受けるのは<b>文章づくりの部分だけ</b>です。SUUMO・at homeの入稿文から、Instagram・X向けの投稿文面（コピーしてご自身で投稿する形）まで。システムの乗り換えも、データの引っ越しも必要ありません。</p>
+      </div>
+      <div class="scope-card reveal reveal-d3">
+        <span class="ico">🎫</span>
+        <h3>月額契約は不要。<br>使うぶんだけの回数券</h3>
+        <p>毎月の固定費はありません。<b>980円・5件から</b>使うぶんだけ購入でき、<b>物件が動かない月は0円</b>。少人数の会社でも1件から始められます。まずは<b>2件まで無料</b>、カード登録なしでお試しいただけます。</p>
+      </div>
+    </div>
+
+    <div class="scope-time reveal reveal-d4">
+      <p class="st-num">30分 × 20件 ＝ <b>月10時間</b></p>
+      <p class="st-txt">1物件の入稿文づくりに30分かかるとした場合、月20件でおよそ10時間。その10時間の使い方を、<b>980円から</b>見直せます。</p>
+    </div>
+
+    <p class="scope-cta reveal reveal-d5"><a href="#price">料金プランを見る ↓</a></p>
+  </div>
+</section>
+
+<section id="price">
+  <div class="wrap">
+    <h2 class="reveal"><span class="en">PRICE</span>料金プラン</h2>
+    <div class="price-pills reveal">
+      <span class="price-pill">月額契約なし</span>
+      <span class="price-pill">使うぶんだけの回数券</span>
+      <span class="price-pill">使わない月は0円</span>
+    </div>
+    <p style="text-align:center; font-size:15.5px; color:#46505f; margin:0 0 40px;">月額の契約ではなく、<b>使う分だけ買う「回数券」方式</b>です。まずは2件まで、無料でお試しいただけます。</p>
+    <div class="price-table four">
+      <div class="plan reveal reveal-d1">
+        <h3>無料お試し</h3>
+        <p class="price">0円</p>
+        <ul>
+          <li>2物件まで処理OK</li>
+          <li><b>全媒体・全機能を試せる</b>（写真は5枚/物件）</li>
+          <li>クレジットカード登録不要</li>
+        </ul>
+      </div>
+      <div class="plan reveal reveal-d2">
+        <h3>ライト</h3>
+        <p class="price">980円<small>／5件</small></p>
+        <ul>
+          <li>1件あたり196円</li>
+          <li>写真コメント 10枚/物件</li>
+          <li>SUUMO＋自社ルール</li>
+        </ul>
+      </div>
+      <div class="plan reveal reveal-d3">
+        <h3>スタンダード</h3>
+        <p class="price">2,480円<small>／15件</small></p>
+        <ul>
+          <li>1件あたり165円</li>
+          <li>写真コメント 15枚/物件</li>
+          <li>SUUMO・at home＋自社ルール</li>
+        </ul>
+      </div>
+      <div class="plan featured reveal reveal-d4">
+        <span class="tag">いちばんお得</span>
+        <h3>マックス</h3>
+        <p class="price">4,680円<small>／30件</small></p>
+        <ul>
+          <li>1件あたり156円</li>
+          <li>写真コメント 20枚すべて対応</li>
+          <li>SUUMO・at home＋自社ルール</li>
+        </ul>
+      </div>
+    </div>
+    <p class="price-note">※価格は税込予定。購入した利用枠の有効期限は6ヶ月です。「1件」は物件1件分の資料読み取り〜文章・写真コメント生成までを含みます。</p>
+  </div>
+</section>
+
+<section class="final" id="register">
+  <h2 class="reveal"><span class="en" style="color:#ffd9b0;">REGISTER</span>先行登録（無料）</h2>
+  <p class="lead reveal">公開のご案内と無料お試し枠を、メールでお送りします。<br>登録は10秒で完了します。営業の電話は行いません。</p>
+  <!-- 先行登録フォーム（Googleフォーム／メールアドレス1問・必須）。回答は登録者のメールに通知されます。 -->
+  <a class="cta-btn reveal" href="https://docs.google.com/forms/d/e/1FAIpQLSeMUh-cP523HkPS02GD8myI6s-ybHZldfKKcf5FbFxAGQlU9g/viewform" target="_blank" rel="noopener">メールアドレスで先行登録する</a>
+  <p class="cta-note reveal" style="color: rgba(255,255,255,0.85);">※入力はメールアドレスのみ。10秒で完了します。</p>
+</section>
+
+<footer>
+  <p>運営：おかあさんのおうち</p>
+  <p class="fine">先行登録でお預かりしたメールアドレスは、本サービスの公開のご案内および無料お試し枠のご連絡にのみ使用します。ご本人の同意なく第三者に提供することはありません。配信停止をご希望の場合は、お送りするメールへのご返信で承ります。</p>
+  <p class="fine">デモ画面の物件はすべて架空のものです。本サービスのAI生成文はお客様の確認を経て使用いただくものであり、掲載内容の最終確認はお客様にて行っていただきます。</p>
+</footer>
+
+<script>
+(function () {
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* --- スクロール出現（reveal / slide） --- */
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add("show"); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  var pendingReveal = Array.prototype.slice.call(document.querySelectorAll(".reveal, .slide-l, .slide-r"));
+  pendingReveal.forEach(function (el) { obs.observe(el); });
+
+  /* IntersectionObserver は高速スクロールやアンカージャンプで要素が1フレーム内に
+     画面を通過すると発火しない（threshold を跨ぐ瞬間が観測されない）。
+     通過済み（bottom < 0）のまま透明で残った要素をスクロール時に検出して表示する保険 */
+  var pendingSeen = [];
+  function sweepMissed() {
+    pendingReveal = pendingReveal.filter(function (el) {
+      if (el.classList.contains("show")) return false;
+      if (el.getBoundingClientRect().bottom < 0) {
+        obs.unobserve(el); el.classList.add("show"); return false;
+      }
+      return true;
+    });
+    pendingSeen = pendingSeen.filter(function (item) {
+      if (item.el.getBoundingClientRect().bottom < 0) {
+        item.io.unobserve(item.el); item.fn(item.el); return false;
+      }
+      return true;
+    });
+  }
+  window.addEventListener("scroll", sweepMissed, { passive: true });
+  var sweepTimer = setInterval(function () {
+    sweepMissed();
+    if (pendingReveal.length === 0 && pendingSeen.length === 0) clearInterval(sweepTimer);
+  }, 600);
+
+  /* --- 3Dハウス：スクロール量とマウス位置に連動して回転 --- */
+  var house = document.getElementById("house3d");
+  if (house && !reduced) {
+    var hMouseX = 0, hMouseY = 0, houseTick = false;
+    function renderHouse() {
+      houseTick = false;
+      var rY = 24 + window.scrollY * 0.12 + hMouseX * 10;
+      var rX = -16 + hMouseY * 7;
+      house.style.transform = "rotateX(" + rX + "deg) rotateY(" + rY + "deg)";
+    }
+    function queueHouse() { if (!houseTick) { houseTick = true; requestAnimationFrame(renderHouse); } }
+    window.addEventListener("scroll", queueHouse, { passive: true });
+    if (window.matchMedia("(min-width: 761px)").matches) {
+      window.addEventListener("mousemove", function (ev) {
+        hMouseX = ev.clientX / window.innerWidth - 0.5;
+        hMouseY = ev.clientY / window.innerHeight - 0.5;
+        queueHouse();
+      }, { passive: true });
+    }
+    renderHouse();
+  }
+
+  /* --- Apple風：3ステップをピン留めし、スクロールで順に強調 --- */
+  var howStage = document.querySelector(".how-stage");
+  if (howStage && !reduced && window.matchMedia("(min-width: 761px) and (min-height: 640px)").matches) {
+    howStage.classList.add("pin-on");
+    var stepEls = howStage.querySelectorAll(".step");
+    var arrowEls = howStage.querySelectorAll(".step-arrow");
+    var pinTick = false;
+    function renderPin() {
+      pinTick = false;
+      var rect = howStage.getBoundingClientRect();
+      var total = rect.height - window.innerHeight;
+      var p = total > 0 ? Math.min(Math.max(-rect.top / total, 0), 1) : 1;
+      var idx = p < 0.34 ? 0 : (p < 0.67 ? 1 : 2);
+      stepEls.forEach(function (el, i) { el.classList.toggle("focus", i === idx); });
+      arrowEls.forEach(function (el, i) { el.classList.toggle("lit", idx > i); });
+    }
+    window.addEventListener("scroll", function () {
+      if (!pinTick) { pinTick = true; requestAnimationFrame(renderPin); }
+    }, { passive: true });
+    renderPin();
+  }
+
+  /* --- 時間比較バー --- */
+  onSeen("#time-compare", 0.2, function (root) {
+    root.querySelectorAll(".t-bar").forEach(function (bar) {
+      setTimeout(function () { bar.style.width = bar.dataset.w; }, 200);
+    });
+  });
+
+  /* --- 数字カウントアップ --- */
+  document.querySelectorAll(".count").forEach(function (el) {
+    onSeen(el, 0.6, function () {
+      var to = parseInt(el.dataset.to, 10), start = null;
+      if (reduced) { el.textContent = to; return; }
+      function tick(ts) {
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / 1200, 1);
+        el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  });
+
+  /* 共通：要素が見えたら1回だけ実行（sel は CSSセレクタまたは要素） */
+  function onSeen(sel, threshold, fn) {
+    var el = typeof sel === "string" ? document.querySelector(sel) : sel;
+    if (!el) return;
+    if (reduced) { fn(el); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { io.unobserve(el); fn(el); }
+      });
+    }, { threshold: threshold });
+    io.observe(el);
+    pendingSeen.push({ el: el, io: io, fn: fn });
+  }
+
+  /* --- SCENE 01: ケンカチャット（複数パターンをゆっくりループ） --- */
+  var chatScripts = [
+    {
+      label: "よくあるやり取り 1/3｜差別化したいのに",
+      stamp: "毎回コレ",
+      msgs: [
+        { who: "me", html: "SUUMOのキャッチコピー、37文字ギリギリまで使って他社と差別化したい" },
+        { who: "ai", html: "「駅近！日当たり良好！おすすめの物件です」" },
+        { who: "me", html: "それ、<b style=\"color:#ffd9b0;\">どの物件にも言える</b>よね…。枠もまだ余ってるし" },
+        { who: "ai", html: "では「とても素敵な物件です」ではいかがでしょうか！" },
+        { who: "me", html: "…もういい、自分で考える（気づけば30分経過）" }
+      ]
+    },
+    {
+      label: "よくあるやり取り 2/3｜おまかせすると",
+      stamp: "危ない…",
+      msgs: [
+        { who: "me", html: "この物件、イイ感じに訴求して" },
+        { who: "ai", html: "「<span class=\"ng\">南向きで日当たり抜群</span>！<span class=\"ng\">築浅</span>のきれいなお家です！」" },
+        { who: "me", html: "南向きじゃないし、築28年なんだけど！？" },
+        { who: "ai", html: "申し訳ありません！雰囲気を優先して書きました！" },
+        { who: "me", html: "広告で事実と違うこと書いたら大問題だよ…" }
+      ]
+    },
+    {
+      label: "よくあるやり取り 3/3｜枠を埋めたいのに",
+      stamp: "また悩む",
+      msgs: [
+        { who: "me", html: "コメント欄、枠ギリギリまで埋めたい。何を書けばいい？" },
+        { who: "ai", html: "物件の魅力を自由にアピールしましょう！" },
+        { who: "me", html: "その魅力の書き方を聞いてるんだけど…" },
+        { who: "ai", html: "「収納tっぷりで駅もスーパも近くて便利です」128文字です！" },
+        { who: "me", html: "誤字あるし、上限100文字って言ったよね…？" }
+      ]
+    }
+  ];
+  onSeen(".anim-chat", 0.2, function () {
+    var box = document.getElementById("chat-msgs");
+    var stamp = document.getElementById("chat-stamp");
+    var caseLabel = document.getElementById("chat-case");
+    var idx = 0;
+    var BUBBLE_MS = 2200;
+    var HOLD_MS = 5000;
+    function buildRow(m) {
+      var row = document.createElement("div");
+      row.className = "msg-row " + m.who;
+      var isMe = m.who === "me";
+      row.innerHTML =
+        '<div class="avcol"><div class="avatar ' + (isMe ? "staff" : "aiav") + '">' +
+        (isMe ? "🧑‍💼" : "🤖") +
+        '</div><div class="av-label">' + (isMe ? "スタッフ" : "AI") + "</div></div>" +
+        '<div class="bubble ' + m.who + '">' + m.html + "</div>";
+      return row;
+    }
+    function play() {
+      var sc = chatScripts[idx];
+      caseLabel.textContent = sc.label;
+      stamp.classList.remove("on");
+      stamp.textContent = sc.stamp;
+      box.innerHTML = "";
+      sc.msgs.forEach(function (m, i) {
+        var row = buildRow(m);
+        box.appendChild(row);
+        setTimeout(function () { row.classList.add("on"); }, 600 + i * BUBBLE_MS);
+      });
+      var stampAt = 600 + sc.msgs.length * BUBBLE_MS + 200;
+      setTimeout(function () { stamp.classList.add("on"); }, stampAt);
+      setTimeout(function () {
+        idx = (idx + 1) % chatScripts.length;
+        play();
+      }, stampAt + HOLD_MS);
+    }
+    if (reduced) {
+      var sc = chatScripts[0];
+      caseLabel.textContent = sc.label;
+      box.innerHTML = "";
+      sc.msgs.forEach(function (m) {
+        var row = buildRow(m);
+        row.classList.add("on");
+        box.appendChild(row);
+      });
+      stamp.classList.add("on");
+    } else { play(); }
+  });
+
+  /* --- SCENE 02: 検索結果で埋もれる/目立つ（ループ） --- */
+  onSeen(".anim-listing", 0.2, function (root) {
+    var rows = root.querySelectorAll(".listing-row");
+    var hero = root.querySelector(".hero-row");
+    function play() {
+      rows.forEach(function (r) { r.classList.remove("on"); });
+      hero.classList.remove("glow");
+      rows.forEach(function (r, i) {
+        setTimeout(function () { r.classList.add("on"); }, 400 + i * 550);
+      });
+      setTimeout(function () { hero.classList.add("glow"); }, 400 + rows.length * 550 + 400);
+      setTimeout(play, 400 + rows.length * 550 + 6000);
+    }
+    if (reduced) {
+      rows.forEach(function (r) { r.classList.add("on"); });
+      hero.classList.add("glow");
+    } else { play(); }
+  });
+
+  /* --- FEATURE 01: ルールチップ（ループ） --- */
+  onSeen(".anim-rules", 0.2, function (root) {
+    var chips = root.querySelectorAll(".rule-chip");
+    function play() {
+      chips.forEach(function (c) { c.classList.remove("on"); });
+      chips.forEach(function (c, i) {
+        setTimeout(function () { c.classList.add("on"); }, 300 + i * 450);
+      });
+      setTimeout(play, 300 + chips.length * 450 + 3500);
+    }
+    if (reduced) { chips.forEach(function (c) { c.classList.add("on"); }); }
+    else { play(); }
+  });
+
+  /* --- FEATURE 02: 文字数カウンター（ループ） --- */
+  onSeen(".anim-count", 0.2, function () {
+    var txt = document.getElementById("cl1-txt");
+    var bar1 = document.getElementById("cl1-bar"), num1 = document.getElementById("cl1-num");
+    var bar2 = document.getElementById("cl2-bar"), num2 = document.getElementById("cl2-num");
+    var line = "◎最上階×街を一望×光ふりそそぐ3LDK";
+    function play() {
+      txt.textContent = ""; num1.textContent = "0 / 37"; num1.className = "count-num";
+      bar1.style.transition = "none"; bar1.style.width = "0";
+      bar2.style.transition = "none"; bar2.style.width = "0"; bar2.className = "";
+      num2.textContent = "0 / 37"; num2.className = "count-num";
+      setTimeout(function () {
+        var i = 0;
+        var iv = setInterval(function () {
+          i++;
+          txt.textContent = line.slice(0, i);
+          num1.textContent = i + " / 37";
+          bar1.style.transition = "width 0.1s linear";
+          bar1.style.width = (i / 37 * 100) + "%";
+          if (i >= line.length) {
+            clearInterval(iv);
+            num1.classList.add("okc");
+            num1.textContent = line.length + " / 37 ✓";
+          }
+        }, 90);
+      }, 400);
+      setTimeout(function () {
+        bar2.style.transition = "width 1s ease";
+        bar2.style.width = "100%";
+        var n = 0;
+        var iv2 = setInterval(function () {
+          n += 3;
+          if (n >= 45) {
+            n = 45; clearInterval(iv2);
+            bar2.classList.add("over");
+            num2.className = "count-num ngc shake";
+            num2.textContent = "45 / 37 ⚠超過";
+          } else { num2.textContent = n + " / 37"; }
+        }, 70);
+      }, 3200);
+      setTimeout(play, 8000);
+    }
+    play();
+  });
+
+  /* --- FEATURE 03: 禁止用語（ループ） --- */
+  onSeen(".anim-ng", 0.2, function () {
+    var w1 = document.getElementById("ngw1"), w2 = document.getElementById("ngw2");
+    var alert = document.getElementById("ng-alert");
+    function play() {
+      [w1, w2].forEach(function (w) { w.classList.remove("hit", "strike"); });
+      alert.classList.remove("on");
+      setTimeout(function () { w1.classList.add("hit"); }, 900);
+      setTimeout(function () { w1.classList.add("strike"); }, 1100);
+      setTimeout(function () { w2.classList.add("hit"); }, 1700);
+      setTimeout(function () { w2.classList.add("strike"); }, 1900);
+      setTimeout(function () { alert.classList.add("on"); }, 2600);
+      setTimeout(play, 7000);
+    }
+    play();
+  });
+
+  /* --- FEATURE 04: 写真スキャン→キャプション（ループ） --- */
+  onSeen(".anim-photo", 0.2, function () {
+    var scan = document.getElementById("photo-scan");
+    var cap = document.getElementById("cap-target");
+    var caret = document.getElementById("cap-caret");
+    var text = "白を基調とした明るいリビング。大きな窓が印象的です。";
+    function play() {
+      scan.classList.remove("go"); scan.style.top = "-40%";
+      cap.textContent = ""; caret.style.display = "none";
+      setTimeout(function () { scan.classList.add("go"); }, 400);
+      setTimeout(function () {
+        caret.style.display = "inline-block";
+        var i = 0;
+        var iv = setInterval(function () {
+          cap.textContent = text.slice(0, ++i);
+          if (i >= text.length) { clearInterval(iv); caret.style.display = "none"; }
+        }, 75);
+      }, 2100);
+      setTimeout(play, 8500);
+    }
+    play();
+  });
+
+  /* --- ヒーローのデモ（3ステップ自動ループ） --- */
+  var steps = document.querySelectorAll(".demo-step");
+  var prog = document.getElementById("prog");
+  var progText = document.getElementById("prog-text");
+  var rows = document.querySelectorAll(".demo-row");
+  var typeTarget = document.getElementById("type-target");
+  var charOk = document.getElementById("char-ok");
+  var btnSuumo = document.getElementById("btn-suumo");
+  var catchCopy = "◎最上階×街を一望×タワーを望む3LDKレジデンス";
+  var timers = [];
+
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function showStep(i) {
+    steps.forEach(function (s) { s.classList.toggle("active", s.dataset.step == i); });
+  }
+  function resetDemo() {
+    timers.forEach(clearTimeout); timers = [];
+    prog.style.transition = "none"; prog.style.width = "0%";
+    progText.textContent = "AIが資料を読み取っています…";
+    rows.forEach(function (r) { r.classList.remove("on"); });
+    btnSuumo.classList.remove("sel");
+    typeTarget.textContent = ""; charOk.style.opacity = "0";
+  }
+  function runDemo() {
+    resetDemo();
+    showStep(0);
+    later(function () {
+      prog.style.transition = "width 1.6s ease";
+      prog.style.width = "100%";
+    }, 300);
+    later(function () { progText.textContent = "読み取り完了（134項目）"; }, 2000);
+
+    later(function () {
+      showStep(1);
+      rows.forEach(function (r, i) { later(function () { r.classList.add("on"); }, 350 * i); });
+    }, 2900);
+
+    later(function () {
+      showStep(2);
+      later(function () { btnSuumo.classList.add("sel"); }, 500);
+      later(function () {
+        var i = 0;
+        var iv = setInterval(function () {
+          typeTarget.textContent = catchCopy.slice(0, ++i);
+          if (i >= catchCopy.length) {
+            clearInterval(iv);
+            charOk.style.opacity = "1";
+          }
+        }, 65);
+        timers.push(iv);
+      }, 1100);
+    }, 5600);
+
+    later(runDemo, 13000);
+  }
+  if (reduced) {
+    showStep(2);
+    btnSuumo.classList.add("sel");
+    typeTarget.textContent = catchCopy;
+    charOk.style.opacity = "1";
+    prog.style.width = "100%";
+  } else {
+    runDemo();
+  }
+})();
+</script>
+
+</body>
+</html>
