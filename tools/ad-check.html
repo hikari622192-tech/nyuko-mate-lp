@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>不動産広告チェッカー｜SUUMO・at homeの禁止用語と文字数を無料でチェック</title>
+<meta name="description" content="広告文を貼り付けるだけで、不動産の表示に関する公正競争規約の禁止用語、SUUMO・at homeの文字数上限、使えない文字種をその場で判定します。登録不要・無料。入力した文章はサーバーに送信されません。">
+<link rel="canonical" href="https://hikari622192-tech.github.io/nyuko-mate-lp/tools/ad-check.html">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hikari622192-tech.github.io/nyuko-mate-lp/tools/ad-check.html">
+<meta property="og:title" content="不動産広告チェッカー｜SUUMO・at homeの禁止用語と文字数を無料でチェック">
+<meta property="og:description" content="広告文を貼り付けるだけで、不動産の表示に関する公正競争規約の禁止用語、SUUMO・at homeの文字数上限、使えない文字種をその場で判定します。登録不要・無料。入力した文章はサーバーに送信されません。">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="../assets/icon.svg">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<style>
+  :root{--navy:#1a3a5c;--navy-dark:#12293f;--accent:#e8842c;--gold:#f5b14f;--bg:#fff;--bg-soft:#f5f7fa;--text:#2c2c2c;--text-soft:#5a6472;--border:#dde3ea}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;color:var(--text);background:var(--bg);line-height:1.8;font-size:16px}
+  .wrap{max-width:860px;margin:0 auto;padding:0 22px}
+  .site-head{background:var(--navy-dark);color:#fff;padding:14px 0}
+  .site-head a{color:#fff;text-decoration:none;font-weight:700;letter-spacing:.02em}
+  .site-head .sub{color:rgba(255,255,255,.7);font-size:13px;font-weight:400;margin-left:.6rem}
+  main{padding:38px 0 10px}
+  h1{font-size:26px;line-height:1.45;color:var(--navy-dark);margin-bottom:.6rem}
+  .lead{color:var(--text-soft);margin-bottom:1.6rem}
+  .tool{margin-bottom:2.6rem}
+  .cta{background:var(--bg-soft);border:1px solid var(--border);border-left:5px solid var(--accent);border-radius:6px;padding:1.3rem 1.4rem;margin:2.4rem 0}
+  .cta p{margin:0 0 .8rem}
+  .cta .btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;padding:.7rem 1.5rem;border-radius:5px}
+  .rel{margin:2rem 0;padding-top:1.2rem;border-top:1px solid var(--border)}
+  .rel a{color:var(--navy);font-weight:700}
+  footer{background:var(--navy-dark);color:rgba(255,255,255,.85);margin-top:3rem;padding:26px 0;font-size:13px}
+  footer a{color:rgba(255,255,255,.85)}
+  footer p{margin:0 0 .5rem}
+  .stamp{color:var(--text-soft);font-size:13px;margin-top:1.4rem}
+  @media(max-width:600px){h1{font-size:21px}}
+</style>
+</head>
+<body>
+<div class="site-head"><div class="wrap"><a href="../">入稿メイト</a><span class="sub">不動産会社専用のAI入稿ツール</span></div></div>
+<main class="wrap">
+  <h1>不動産広告チェッカー</h1>
+  <p class="lead">SUUMO・at homeに入稿する広告文を、公開前にその場でチェックできます。登録もインストールも要りません。</p>
+  <div class="tool">
+<!-- 不動産広告チェッカー（貼り付け用・単体で動作します） -->
+<!-- 自動生成: scripts/build-embed-checker.mjs / ルール基準日 2026-07-25 -->
+<!-- 手で編集しないでください。ルールを直したらスクリプトを再実行して貼り直します。 -->
+<div id="ad-check-embed">
+<style>
+#ad-check-embed{--acc:#12293f;--ng:#b00020;--ok:#0a7d3f;line-height:1.7;max-width:760px}
+#ad-check-embed *{box-sizing:border-box}
+#ad-check-embed .ace-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0}
+#ad-check-embed select,#ad-check-embed textarea{font-family:inherit;font-size:1rem;padding:.5rem;border:1px solid #ccc;border-radius:4px;background:#fff;color:#222}
+#ad-check-embed textarea{width:100%;min-height:9em}
+#ad-check-embed .ace-count{font-weight:700}
+#ad-check-embed .ace-box{border:2px solid #ccc;border-radius:6px;padding:1rem;margin-top:1rem}
+#ad-check-embed .ace-box.ng{border-color:var(--ng)}
+#ad-check-embed .ace-box.ok{border-color:var(--ok)}
+#ad-check-embed .ace-ttl{font-weight:700;margin:0 0 .5rem}
+#ad-check-embed .ace-ttl.ng{color:var(--ng)}
+#ad-check-embed .ace-ttl.ok{color:var(--ok);margin:0}
+#ad-check-embed .ace-chip{display:inline-block;background:#fde8ea;padding:.1rem .45rem;margin:0 .3rem .3rem 0;border-radius:3px;font-family:monospace}
+#ad-check-embed .ace-note{color:#555;margin:.3rem 0}
+#ad-check-embed ul{margin:.3rem 0 .8rem;padding-left:1.3rem}
+#ad-check-embed .ace-sec{margin-top:2rem}
+#ad-check-embed .ace-word{display:inline-block;background:#f1f1f1;padding:.1rem .5rem;margin:0 .3rem .3rem 0;border-radius:3px}
+</style>
+
+<p>広告文を貼り付けると、使用が禁止されている用語、媒体ごとの文字数の上限、使えない文字種をその場で確認できます。<strong>入力した文章はサーバーへ送信されません。</strong>すべてお使いのブラウザ内で判定しています。</p>
+
+<div class="ace-row">
+  <label>媒体 <select id="ace-media"></select></label>
+  <label>入力欄 <select id="ace-target"></select></label>
+</div>
+
+<textarea id="ace-text" placeholder="広告文を貼り付けてください"></textarea>
+
+<p><span>文字数：</span><span class="ace-count" id="ace-count">0</span><span id="ace-remain"></span></p>
+
+<div id="ace-result"></div>
+
+<div class="ace-sec" id="ace-prohibited"></div>
+<div class="ace-sec" id="ace-standards"></div>
+
+<div class="ace-sec">
+  <h3>チェックできる範囲</h3>
+  <p class="ace-note">登録済みの用語リストと媒体ルールに対する機械的な照合です。問題が見つからなかった場合でも、広告表現として適切であることを保証するものではありません。根拠の裏付けが必要な表現、事実と異なる記載、物件情報そのものの誤りは検出できません。最終的な確認は必ず人の目で行ってください。</p>
+  <p class="ace-note">用語リストの基準日：2026-07-25</p>
+</div>
+
+<script>
+(function(){
+  var D = {"version":"2026-07-25","prohibited":[{"category":"断定的表現","words":["完全","完ぺき","完璧","絶対","万全"],"note":"欠点が一切ないことを意味する表現。例「完全防音で外の音が一切気になりません」"},{"category":"優位性・比較表現","words":["日本一","日本初","業界一","業界初","当社だけ","抜群","他に類を見ない"],"note":"地域単位で事実が実証され、根拠を表示できる場合を除き使用不可"},{"category":"選別表現","words":["特選","厳選"],"note":"実際の選別基準と根拠がなければ違反"},{"category":"最上級表現","words":["最高","最高級","特級","トップクラス","極上","至高"],"note":"根拠となる事実を併記できる場合を除き使用不可"},{"category":"価格表現","words":["格安","激安","破格","大幅値引き","堀出","掘出","土地値"],"note":"根拠の事実表示が必須。二重価格表示も禁止"},{"category":"人気・売行き表現","words":["完売","大人気","予約殺到","即完売"],"note":"事実でない場合は禁止。AI生成では事実確認ができないため使用しない"}],"usageStandards":[{"term":"新築","standard":"建築後1年未満かつ未入居のものに限る。これ以外に「新築」と表示しない。"},{"term":"徒歩◯分","standard":"道路距離80メートルにつき1分として算出する。確定値に徒歩分数の記載がない場合、距離から自分で計算して表示しない。"},{"term":"LDK・DK","standard":"居室1部屋の場合、LDKは8畳以上、DKは4.5畳以上。確定値の表記をそのまま使い、畳数から呼称を作り替えない。"},{"term":"リフォーム済・リノベーション済","standard":"実施内容・実施時期が確定値にある場合のみ表示する。未確認なら書かない。"}],"media":[{"id":"suumo","name":"SUUMO","fields":[{"target":"catch_copy","label":"メインキャッチ（検索一覧キャッチ）","maxLength":37,"charset":"no_half_width_kana","prohibitedWords":[],"prohibitedNotes":[]},{"target":"description","label":"サブキャッチ（物件コメント）","maxLength":300,"charset":"no_half_width_kana","prohibitedWords":[],"prohibitedNotes":[]},{"target":"image_caption","label":"画像のキャプション","maxLength":100,"charset":"no_half_width_kana","prohibitedWords":[],"prohibitedNotes":[]}]},{"id":"athome","name":"at home","fields":[{"target":"catch_copy","label":"おすすめコメント","maxLength":100,"charset":"full_width_only","prohibitedWords":["仲介手数料","手数料無料","媒介報酬"],"prohibitedNotes":["仲介手数料に関する表記を含めてはいけない（例:「仲介手数料無料」「仲介手数料3%」など、金額・率・有無を問わず一切書かない）。"]},{"target":"description","label":"エンド向けアピール","maxLength":500,"charset":"full_width_only","prohibitedWords":["仲介手数料","手数料無料","媒介報酬"],"prohibitedNotes":["仲介手数料に関する表記を含めてはいけない（例:「仲介手数料無料」「仲介手数料3%」など、金額・率・有無を問わず一切書かない）。"]},{"target":"image_caption","label":"画像の説明文","maxLength":100,"charset":"full_width_only","prohibitedWords":[],"prohibitedNotes":[]}]}]};
+  var HW_KANA = /[\uFF61-\uFF9F]/;
+  var HW_CHAR = /[\u0020-\u007E\uFF61-\uFF9F]/;
+  var CS_LABEL = {
+    full_width_only: "全角文字のみ（半角の英数字・記号・カナは使えません）",
+    no_half_width_kana: "半角カタカナは使えません"
+  };
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){ return String(s).replace(/[&<>"]/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); };
+
+  var mediaSel = $("ace-media"), targetSel = $("ace-target"), textEl = $("ace-text");
+
+  D.media.forEach(function(m){
+    var o = document.createElement("option");
+    o.value = m.id; o.textContent = m.name; mediaSel.appendChild(o);
+  });
+
+  function currentMedia(){
+    return D.media.filter(function(m){ return m.id === mediaSel.value; })[0] || D.media[0];
+  }
+  function currentField(){
+    var m = currentMedia();
+    return m.fields.filter(function(f){ return f.target === targetSel.value; })[0] || m.fields[0];
+  }
+  function fillTargets(){
+    targetSel.innerHTML = "";
+    currentMedia().fields.forEach(function(f){
+      var o = document.createElement("option");
+      o.value = f.target; o.textContent = f.label; targetSel.appendChild(o);
+    });
+  }
+
+  function charsetHits(text, charset){
+    if(!charset || !text) return [];
+    var re = charset === "full_width_only" ? HW_CHAR : HW_KANA;
+    var seen = {}, out = [];
+    Array.from(text).forEach(function(ch){
+      if(ch === "\n" || ch === "\r" || ch === "\t") return;
+      if(re.test(ch) && !seen[ch]){ seen[ch] = 1; out.push(ch); }
+    });
+    return out;
+  }
+
+  function run(){
+    var f = currentField(), text = textEl.value, len = Array.from(text).length;
+    $("ace-count").textContent = len + (f.maxLength ? " / " + f.maxLength : "");
+    var over = f.maxLength && len > f.maxLength ? len - f.maxLength : 0;
+    $("ace-count").style.color = over ? "var(--ng)" : "var(--ok)";
+    $("ace-remain").textContent = !f.maxLength ? "" :
+      over ? "（" + over + "文字オーバー）" : "（あと" + (f.maxLength - len) + "文字）";
+
+    if(!text){ $("ace-result").innerHTML = '<p class="ace-note">文章を入力すると、ここに判定結果が表示されます。</p>'; return; }
+
+    var ng = [];
+    D.prohibited.forEach(function(g){
+      g.words.forEach(function(w){ if(text.indexOf(w) >= 0) ng.push({w:w, c:g.category}); });
+    });
+    var mediaHits = (f.prohibitedWords||[]).filter(function(w){ return text.indexOf(w) >= 0; });
+    var cs = charsetHits(text, f.charset);
+
+    if(!ng.length && !mediaHits.length && !cs.length && !over){
+      $("ace-result").innerHTML = '<div class="ace-box ok"><p class="ace-ttl ok">このチェックの範囲では問題は見つかりませんでした</p></div>';
+      return;
+    }
+
+    var h = '<div class="ace-box ng"><p class="ace-ttl ng">修正が必要な箇所があります</p>';
+    if(ng.length){
+      h += "<strong>使用禁止用語</strong><ul>" + ng.map(function(x){
+        return "<li>「" + esc(x.w) + "」— " + esc(x.c) + "</li>"; }).join("") + "</ul>";
+    }
+    if(mediaHits.length){
+      h += "<strong>" + esc(currentMedia().name) + "で書けない内容</strong><ul>" +
+        mediaHits.map(function(w){ return "<li>「" + esc(w) + "」</li>"; }).join("") + "</ul>" +
+        (f.prohibitedNotes||[]).map(function(n){ return '<p class="ace-note">' + esc(n) + "</p>"; }).join("");
+    }
+    if(cs.length){
+      h += "<strong>使えない文字</strong>" +
+        '<p class="ace-note">' + esc(CS_LABEL[f.charset] || "") + "</p><p>" +
+        cs.map(function(c){ return '<span class="ace-chip">' + esc(c) + "</span>"; }).join("") + "</p>";
+    }
+    if(over){
+      h += "<strong>文字数オーバー</strong><p>" + esc(f.label) + "は" + f.maxLength +
+        "文字以内です。" + over + "文字減らしてください。</p>";
+    }
+    $("ace-result").innerHTML = h + "</div>";
+  }
+
+  $("ace-prohibited").innerHTML = "<h3>不動産広告で使えない用語の一覧</h3>" +
+    '<p class="ace-note">不動産の表示に関する公正競争規約で、使用が禁止または制限されている用語です。合理的な根拠を表示できる場合に限り認められる語もありますが、根拠を示せないのであれば使わないでください。</p>' +
+    D.prohibited.map(function(g){
+      return "<h4>" + esc(g.category) + "</h4><p>" +
+        g.words.map(function(w){ return '<span class="ace-word">' + esc(w) + "</span>"; }).join("") +
+        "</p>" + (g.note ? '<p class="ace-note">' + esc(g.note) + "</p>" : "");
+    }).join("");
+
+  $("ace-standards").innerHTML = "<h3>間違えやすい用語の使用基準</h3>" +
+    D.usageStandards.map(function(s){
+      return "<p><strong>「" + esc(s.term) + "」</strong><br>" + esc(s.standard) + "</p>";
+    }).join("");
+
+  mediaSel.addEventListener("change", function(){ fillTargets(); run(); });
+  targetSel.addEventListener("change", run);
+  textEl.addEventListener("input", run);
+  fillTargets();
+  run();
+})();
+</script>
+</div>
+  </div>
+  <p class="stamp">ルール基準日：2026-07-25　媒体の仕様は変更されることがあります。最新の仕様は各媒体の入稿マニュアルでご確認ください。</p>
+  <div class="cta">
+    <p><strong>このチェックを、入稿文を作るところから自動でやります。</strong><br>
+    「入稿メイト」は不動産会社専用のAI入稿ツールです。物件資料を入れると、媒体ルールに沿った広告文の下書きまで作ります。現在、先行登録を受け付けています。</p>
+    <a class="btn" href="../">入稿メイトを見る（無料の先行登録）</a>
+  </div>
+  <p class="rel">あわせて使う：<a href="limits.html">SUUMO・at homeの文字数早見表</a></p>
+</main>
+<footer><div class="wrap">
+  <p>運営：おかあさんのおうち</p>
+  <p><a href="../">入稿メイト</a>｜<a href="../terms.html">利用規約</a>｜<a href="../torihiki.html">取引条件の表示</a>｜<a href="../privacy.html">プライバシーポリシー</a></p>
+  <p>本ページの判定は、登録済みのルールに対する機械的な照合です。広告表現として適切であることを保証するものではありません。</p>
+</div></footer>
+</body>
+</html>

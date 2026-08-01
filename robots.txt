@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hikari622192-tech.github.io/nyuko-mate-lp/sitemap.xml
